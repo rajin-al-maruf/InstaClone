@@ -1,12 +1,23 @@
-import { Button } from "@chakra-ui/react"
+import { Route, Routes } from "react-router-dom"
+import HomePage from "./Pages/HomePage/HomePage"
+import AuthPage from "./pages/AuthPage/AuthPage"
+import PageLayout from "./Layouts/PageLayout/PageLayout"
+import ProfilePage from "./Pages/ProfilePage/ProfilePage"
+
 
 function App() {
+ 
 
   return (
     <>
-      <Button>
-        click me
-      </Button>
+    <PageLayout>
+      <Routes>
+        <Route path="/" element={<HomePage />}/>
+        <Route path="/auth" element={<AuthPage />}/>
+        <Route path="/:username" element={<ProfilePage />}/>
+      </Routes>
+    </PageLayout>
+      
     </>
   )
 }
