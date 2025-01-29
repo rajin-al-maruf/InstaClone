@@ -1,4 +1,4 @@
-import {Box, Flex, Link, Avatar} from '@chakra-ui/react'
+import {Box, Flex, Link, Avatar, Tooltip, Button} from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { CreatePostLogo, 
   InstagramLogo, 
@@ -7,6 +7,7 @@ import { CreatePostLogo,
   SearchLogo } from '../../assets/contants'
 import { AiFillHome } from "react-icons/ai";
 import { BiLogOut } from 'react-icons/bi'
+import useLogout from '../../hooks/useLogout';
 
 
 
@@ -38,6 +39,8 @@ const Sidebar = () => {
   
   ]
   
+  const { handleLogout, isLoggingOut} = useLogout()
+
   return (
         <Box 
         h={"100vh"} 
@@ -60,19 +63,18 @@ const Sidebar = () => {
               <InstagramMobileLogo/>
             </Link>
 {/* Home, search, noti, post, profile */}
-            {/* I wont use tooltip cz its not working properly for some reason */}
             <Flex direction={"column"} gap={5} cursor={"pointer"}>
               {sidebarItems.map((item, index) => (
-                // <Tooltip
-                //   key={index}
-                //   label= {item.text}
-                //   hasArrow
-                //   placement="right"
-                //   positioning={{placement: "right"}}
-                //   openDelay={500}
-                //   display={{base: "block", md: "none"}}
-                //   ml={1}
-                // >
+                <Tooltip
+                  key={index}
+                  label= {item.text}
+                  hasArrow
+                  placement="right"
+                  positioning={{placement: "right"}}
+                  openDelay={500}
+                  display={{base: "block", md: "none"}}
+                  ml={1}
+                >
                   <Link
                     key={index}
                     display={"flex"}
@@ -90,14 +92,21 @@ const Sidebar = () => {
                     {item.icon}
                     <Box display={{base: "none", md: "block"}}>{item.text}</Box>
                   </Link>
-                // </Tooltip>
+                </Tooltip>
               ))}
             </Flex>
 {/* Logout */}
-                  <Link
-                    display={"flex"}
-                    variant={"unstyled"}
-                    to={"/auth"}
+                <Tooltip
+                  label= {"Logout"}
+                  hasArrow
+                  placement="right"
+                  positioning={{placement: "right"}}
+                  openDelay={500}
+                  display={{base: "block", md: "none"}}
+                  ml={1}
+                >
+                  <Flex
+                    onClick={handleLogout}
                     as={RouterLink}
                     alignItems={"center"}
                     gap={4}
@@ -109,8 +118,16 @@ const Sidebar = () => {
                     mt={"auto"}
                   >
                     <BiLogOut size={25}/>
-                    <Box display={{base: "none", md: "block"}}>Logout</Box>
-                  </Link>
+                    <Button 
+                      variant={"ghost"} 
+                      _hover={{bg: "transparent"}}
+                      isLoading={isLoggingOut}
+                      display={{base: "none", md: "block"}}
+                    >
+                      Logout
+                    </Button>
+                  </Flex>
+                </Tooltip>  
           </Flex>
         </Box>
   )
