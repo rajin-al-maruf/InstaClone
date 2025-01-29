@@ -45,7 +45,7 @@ const Sidebar = () => {
         <Box 
         h={"100vh"} 
         borderRight={"1px solid"} 
-        borderColor={"whiteAlpha.300"} 
+        borderColor={"whiteAlpha.300"}  
         px={{base: 2, md: 4}} 
         py={8} 
         position={"sticky"} 
