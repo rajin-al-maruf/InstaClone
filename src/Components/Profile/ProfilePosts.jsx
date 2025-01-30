@@ -30,7 +30,7 @@ const ProfilePosts = () => {
     {!isLoading && (
       <>
         {UserData.map((userdata, index) => (
-          <ProfilePost kex={index} img={userdata.img}/>
+          <ProfilePost key={index} img={userdata.img}/>
         ))}
       </>
     )}
