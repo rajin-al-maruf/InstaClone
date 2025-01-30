@@ -9,11 +9,13 @@ const SuggestedHeader = () => {
   const {handleLogout, isLoggingOut} = useLogout()
   const authUser = useAuthStore((state) => state.user)
 
+  if(!authUser) return null;
+
   return (
       <Flex align={"center"} justify={"space-between"} w={"100%"}>
-        <Flex align={"center"} gap={4}>
+        <Flex align={"center"} gap={2}>
           <Link to={`${authUser.userName}`}>
-            <Avatar src={authUser.profilePicURL} alt="User profile" size={"lg"}/>
+            <Avatar src={authUser.profilePicURL} alt="User profile" size={"md"}/>
           </Link>
           <Link to={`${authUser.userName}`}>
             <Text fontSize={12} fontWeight={"bold"}>
