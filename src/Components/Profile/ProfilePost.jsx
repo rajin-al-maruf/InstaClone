@@ -9,9 +9,13 @@ import { FaComment } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import Comment from '../Comment/Comment'
 import PostFooter from '../FeedPosts/PostFooter'
+import useUserProfileStore from '../../store/userProfileStore'
+import useAuthStore from '../../store/authStore'
 
-const ProfilePost = ({img}) => {
+const ProfilePost = ({post}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {userProfile} = useUserProfileStore()
+  const {user} = useAuthStore()
 
   return (
     <>
@@ -26,7 +30,7 @@ const ProfilePost = ({img}) => {
         onClick={onOpen}
     >
       <Image 
-        src={img} 
+        src={post.imageURL} 
         alt="profile post"
         w={"100%"} 
         h={"100%"} 
@@ -50,13 +54,13 @@ const ProfilePost = ({img}) => {
           <Flex>
             <AiFillHeart size={20}/>
             <Text fontWeight={"bold"} ml={2}>
-              20
+              {post.likes.length}
             </Text>
           </Flex>
           <Flex>
             <FaComment size={20}/>
             <Text fontWeight={"bold"} ml={2}>
-              7
+            {post.comments.length}
             </Text>
           </Flex>
         </Flex>
@@ -71,29 +75,40 @@ const ProfilePost = ({img}) => {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody bg={"black"} pb={5}>
-            <Flex gap={4} w={{base: "90%", sm: "70%", md:"full"}} mx={"auto"}>
-              <Box
+            <Flex gap={4} w={{base: "90%", sm: "70%", md:"full"}} mx={"auto"} maxH={"90vh"} minH={"50vh"}>
+              <Flex
                 borderRadius={4}
                 overflow={"hidden"}
                 border={"1px solid"}
                 borderColor={"whiteAlpha.300"}
                 flex={1.5}
+                justifyContent={"center"}
+                alignItems={"center"}
               >
-                <Image src={img} alt="post picture" />
-              </Box>
+                <Image src={post.imageURL} alt="post picture" />
+              </Flex>
               <Flex flex={1} flexDirection={"column"} px={10} display={{base:"none", md:"flex"}}>
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
 
                   <Flex alignItems={"center"} gap={4}>
-                    <Avatar src="/profilepic.png" size={"sm"} name='as a programmer' />
+                    <Avatar src={userProfile.profilePicURL} size={"sm"} name='as a programmer' />
                     <Text fontWeight={"bold"} fontSize={12}>
-                      asaprogrammer_
+                      {userProfile.userName}
                     </Text>
                   </Flex>
 
-                  <Box _hover={{bg: "whiteAlpha.300", color:"red.500"}} borderRadius={4} p={1}>
-                    <MdDelete size={20} cursor={"pointer"} />
-                  </Box>
+                  {user.uid === userProfile.uid && (
+                    <Box
+                      size={"sm"}
+                      bg={"transparent"}
+                      _hover={{bg: "whiteAlpha.300", 
+                      color:"red.500"}} 
+                      borderRadius={4} 
+                      p={1}
+                    >
+                      <MdDelete size={20} cursor={"pointer"} />
+                    </Box>
+                  )}
                 </Flex>
                 <Divider my={2} bg={"gray.500"}/>
 
@@ -112,7 +127,7 @@ const ProfilePost = ({img}) => {
                   />
                 </VStack>
 
-                {/* <Divider my={2} bg={"gray.800"}/> */}
+                <Divider my={2} bg={"gray.800"}/>
                 <PostFooter isProfile={true}/>
               </Flex>
             </Flex>
