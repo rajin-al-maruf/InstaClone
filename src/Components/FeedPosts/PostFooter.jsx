@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { CommentLogo, NotificationsLogo, UnlikeLogo } from "../../assets/contants"
 import { Flex, Box , Text, Input, Button } from "@chakra-ui/react"
 import usePostComment from "../../hooks/usePostComment"
@@ -8,6 +8,7 @@ const PostFooter = ({ post, username, isProfile}) => {
   const [likesCount, setLikesCount] = useState(0)
   const {isCommenting, handlePostComment} = usePostComment()
   const [comment, setComment] = useState('')
+  const commentRef = useRef(null)
 
   const handleSubmitComment = async() => {
     await handlePostComment(post.id, comment)
@@ -18,13 +19,14 @@ const PostFooter = ({ post, username, isProfile}) => {
     setLike(!like)
     setLikesCount(like? likesCount + 1 : likesCount - 1)
   }
+
   return (
     <Box mb={10} mt={"auto"}>
       <Flex align="center" gap={4} w={"full"} mb={2} mt={4}>
         <Box onClick={handleLike} cursor={"pointer"} fontSize={18}> 
           {like ? <NotificationsLogo/> : <UnlikeLogo />}
         </Box>
-        <Box cursor={"pointer"} fontSize={18}> 
+        <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}> 
           <CommentLogo />
         </Box>
       </Flex>
@@ -49,7 +51,7 @@ const PostFooter = ({ post, username, isProfile}) => {
       <Flex gap={2} mt={2} align={"center"}>
         <Input variant={"flushed"} placeholder="Add a comment.." fontSize={14}
           onChange={(e) => setComment(e.target.value)}
-          value={comment}/>
+          value={comment} ref={commentRef}/>
         <Button
           variant={"outline"}
           color={"blue.500"}

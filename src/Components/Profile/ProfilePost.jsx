@@ -16,6 +16,7 @@ import useShowToast from '../../hooks/useShowToast'
 import { arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { firestore } from '../../firebase/firebase'
 import usePostStore from '../../store/postStore'
+import Caption from '../Comment/Caption'
 
 const ProfilePost = ({post}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -149,6 +150,9 @@ const ProfilePost = ({post}) => {
                 <Divider my={2} bg={"gray.500"}/>
 
                 <VStack w={"full"} alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
+                  {/* Caption and comments */}
+                  
+                  {post.caption && <Caption post={post}/>}
                   {post.comments.map((comment, index) => (
                     <Comment key={index} comment={comment}/>
                   ))}
