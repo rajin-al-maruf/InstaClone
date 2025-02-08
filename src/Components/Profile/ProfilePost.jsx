@@ -149,22 +149,13 @@ const ProfilePost = ({post}) => {
                 <Divider my={2} bg={"gray.500"}/>
 
                 <VStack w={"full"} alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
-                  <Comment
-                    createdAt='1d ago'
-                    username='asaprogrammer_'
-                    profilepic='/profilepic.png'
-                    text='Dummy image from unsplash'
-                  />
-                  <Comment
-                    createdAt='5d ago'
-                    username='nitesh_kumer'
-                    profilepic='/img4.png'
-                    text='What a wonderful picture!'
-                  />
+                  {post.comments.map((comment, index) => (
+                    <Comment key={index} comment={comment}/>
+                  ))}
                 </VStack>
 
                 <Divider my={2} bg={"gray.800"}/>
-                <PostFooter isProfile={true}/>
+                <PostFooter isProfile={true} post={post}/>
               </Flex>
             </Flex>
           </ModalBody>

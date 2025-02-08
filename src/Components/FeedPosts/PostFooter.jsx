@@ -1,10 +1,18 @@
 import React, { useState } from "react"
 import { CommentLogo, NotificationsLogo, UnlikeLogo } from "../../assets/contants"
 import { Flex, Box , Text, Input, Button } from "@chakra-ui/react"
+import usePostComment from "../../hooks/usePostComment"
 
-const PostFooter = ({username, isProfile}) => {
+const PostFooter = ({ post, username, isProfile}) => {
   const [like, setLike] = useState(true)
   const [likesCount, setLikesCount] = useState(0)
+  const {isCommenting, handlePostComment} = usePostComment()
+  const [comment, setComment] = useState('')
+
+  const handleSubmitComment = async() => {
+    await handlePostComment(post.id, comment)
+    setComment('')
+  }
 
   const handleLike = () => {
     setLike(!like)
@@ -39,10 +47,14 @@ const PostFooter = ({username, isProfile}) => {
 
 {/* couldnt use input group so i am using flex instade */}
       <Flex gap={2} mt={2} align={"center"}>
-        <Input variant={"flushed"} placeholder="Add a comment" fontSize={14}/>
+        <Input variant={"flushed"} placeholder="Add a comment.." fontSize={14}
+          onChange={(e) => setComment(e.target.value)}
+          value={comment}/>
         <Button
           variant={"outline"}
           color={"blue.500"}
+          onClick={handleSubmitComment}
+          isLoading={isCommenting}
         >Post</Button>
       </Flex>
     </Box>
