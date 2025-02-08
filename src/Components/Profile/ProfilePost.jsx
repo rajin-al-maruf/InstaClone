@@ -1,9 +1,10 @@
-import { GridItem, Flex, Text, Image, Box, Avatar, VStack,
+import { GridItem, Flex, Text, Image, Avatar, VStack,
         Modal, ModalOverlay, ModalContent,
         ModalCloseButton, ModalBody, useDisclosure,
-        Divider
+        Divider,
+        Button
         } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { AiFillHeart } from 'react-icons/ai'
 import { FaComment } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -11,11 +12,44 @@ import Comment from '../Comment/Comment'
 import PostFooter from '../FeedPosts/PostFooter'
 import useUserProfileStore from '../../store/userProfileStore'
 import useAuthStore from '../../store/authStore'
+import useShowToast from '../../hooks/useShowToast'
+import { arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { firestore } from '../../firebase/firebase'
+import usePostStore from '../../store/postStore'
 
 const ProfilePost = ({post}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {userProfile} = useUserProfileStore()
   const {user} = useAuthStore()
+  const showToast = useShowToast()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const {deletePost} = usePostStore()
+  const decrementPostCount = useUserProfileStore(state => state.deletePost)
+
+  const handleDeletePost = async () => {
+    if(!window.confirm("Are you sure you want to delete this post?")) return
+    if(isDeleting) return
+    setIsDeleting(true)
+    try {
+      //only deleting the doc from firestore leaving img in cloudinary
+      const userRef = doc(firestore, "users", user.uid)
+      const postRef = doc(firestore, "posts", post.id)
+
+      await deleteDoc(postRef)
+
+      await updateDoc(userRef, {
+        posts: arrayRemove(post.id)
+      })
+
+      deletePost(post.id)
+      decrementPostCount(post.id)
+      showToast("Success", "Post deleted successfully", "success")
+    } catch (error) {
+      showToast("Error", error.message, "error")
+    }finally{
+      setIsDeleting(false)
+    }
+  }
 
   return (
     <>
@@ -98,16 +132,18 @@ const ProfilePost = ({post}) => {
                   </Flex>
 
                   {user.uid === userProfile.uid && (
-                    <Box
+                    <Button
                       size={"sm"}
                       bg={"transparent"}
                       _hover={{bg: "whiteAlpha.300", 
                       color:"red.500"}} 
                       borderRadius={4} 
                       p={1}
+                      onClick={handleDeletePost}
+                      isLoading={isDeleting}
                     >
                       <MdDelete size={20} cursor={"pointer"} />
-                    </Box>
+                    </Button>
                   )}
                 </Flex>
                 <Divider my={2} bg={"gray.500"}/>
