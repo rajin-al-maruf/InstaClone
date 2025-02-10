@@ -132,6 +132,7 @@ function useCreatePost() {
 	const { createPost } = usePostStore()
 	const { addPost } = useUserProfileStore()
 	const { pathname } = useLocation()
+	const {userProfile} = useUserProfileStore()
 
 	// Cloudinary Upload function
 
@@ -181,8 +182,9 @@ function useCreatePost() {
 			const userDocRef = doc(firestore, "users", user.uid)
 
 			await updateDoc(userDocRef,{posts:arrayUnion(postDocRef.id)})
-			createPost({ id: postDocRef.id, ...newPost})
-			addPost({ id: postDocRef.id, ...newPost})
+
+			if(user.uid === userProfile.uid) createPost({ id: postDocRef.id, ...newPost})
+			if(pathname !== "/" && user.uid === userProfile.uid) addPost({ id: postDocRef.id, ...newPost})
 
 			showToast("Success", "Post created successfully", "success")
 			

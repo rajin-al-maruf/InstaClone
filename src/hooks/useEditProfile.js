@@ -58,7 +58,7 @@ const useEditProfile = () => {
             fullName: inputs.fullName || user.fullName,
             userName: inputs.userName || user.userName,
             bio: inputs.bio || user.bio,
-            profilePicURL: profilePicURL,
+            profilePicURL: profilePicURL || user.profilePicURL,
         }
 
         await updateDoc(userDocRef, updatedUser)

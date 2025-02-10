@@ -71,7 +71,8 @@ const PostFooter = ({ post, isProfile, creatorProfile}) => {
 							ref={commentRef}
 						/>
 						<InputRightElement>
-							<Button
+							{comment? 
+                <Button
 								fontSize={14}
 								color={"blue.500"}
 								fontWeight={600}
@@ -82,7 +83,7 @@ const PostFooter = ({ post, isProfile, creatorProfile}) => {
 								isLoading={isCommenting}
 							>
 								Post
-							</Button>
+							</Button> : null}
 						</InputRightElement>
 					</InputGroup>
 				</Flex>
